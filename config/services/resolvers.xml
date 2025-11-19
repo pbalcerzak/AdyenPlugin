@@ -121,5 +121,13 @@
             <!--    Wrapper to expose it for winzou callbacks    -->
             <argument type="service" id="sylius_refund.state_resolver.order_fully_refunded" />
         </service>
+
+        <service
+                class="Sylius\AdyenPlugin\Resolver\Currency\PaymentCurrencyResolver"
+                id="sylius_adyen.resolver.currency.payment_currency_resolver"
+        >
+            <argument type="service" id="sylius.context.channel" />
+            <argument>%sylius_adyen.currency%</argument>
+        </service>
     </services>
 </container>
