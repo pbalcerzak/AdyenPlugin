@@ -19,7 +19,9 @@ final class Version20241119094104 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf($schema->getTable('sylius_adyen_log')->hasColumn('token'), 'Token already exists.');
+        if ($schema->getTable('sylius_adyen_log')->hasColumn('token')) {
+            return;
+        }
 
         $this->addSql('ALTER TABLE sylius_adyen_log ADD token VARCHAR(20) DEFAULT NULL');
     }
