@@ -192,12 +192,21 @@ import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
             },
         }
 
+        const formatter = new Intl.DateTimeFormat('fr-BE', { month: '2-digit', year: '2-digit' });
+        const formattedDate = formatter.format(new Date());
+
         const dropin = new Dropin(checkout, {
             paymentMethodsConfiguration: {
+                bcmc: {
+                    hasHolderName: true,
+                    holderNameRequired: true,
+                    minimumExpiryDate: formattedDate,
+                },
                 card: {
                     hasHolderName: true,
                     holderNameRequired: true,
-                    enableStoreDetails: configuration.enableStoreDetails,
+                    enableStoreDetails: configuration.canBeStored,
+                    minimumExpiryDate: formattedDate,
                 },
                 paypal: {
                     environment: configuration.environment,
@@ -214,11 +223,14 @@ import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
                         value: configuration.amount.value
                     }
                 },
-                facilypay_3x: oneyConfiguration,
-                facilypay_4x: oneyConfiguration,
-                facilypay_6x: oneyConfiguration,
-                facilypay_10x: oneyConfiguration,
-                facilypay_12x: oneyConfiguration,
+                googlepay: {
+                    environment: configuration.environment,
+                    countryCode: configuration.billingAddress.countryCode,
+                    amount: {
+                        currency: configuration.amount.currency,
+                        value: configuration.amount.value,
+                    },
+                },
             },
             showRemovePaymentMethodButton: true,
             onDisableStoredPaymentMethod: disableStoredPaymentMethodHandler
